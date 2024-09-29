@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Suppliers and Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    
+    <h2>List of Suppliers and Products</h2>
+    <p>Report Generation Date: {{ current_date|date:"d/m/Y H:i:s" }}</p>
+    
+    {% for supplier in suppliers %}
+        <h3>{{ supplier.name }}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Cost Per Unit</th>
+                    <th>Quantity</th>
+                    <th>Acquisition Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for purchase_product in supplier.purchaseproduct_set.all %}
+                    <tr>
+                        <td>{{ purchase_product.product.name }}</td>
+                        <td>{{ purchase_product.cost }}</td>
+                        <td>{{ purchase_product.qty }}</td>
+                        <td>{{ purchase_product.date_added }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</body>
+</html>

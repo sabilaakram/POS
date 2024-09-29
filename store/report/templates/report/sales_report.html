@@ -1,0 +1,385 @@
+{% extends 'base.html' %}
+
+{% block pageContent %}
+
+{% load humanize %}
+<style>
+    .mdc-card {
+        padding: 8px !important;
+    }
+
+    .card-title {
+        margin-bottom: 4px !important;
+    }
+
+    .mdc-layout-grid__cell {
+        padding: 4px !important;
+    }
+
+    .button-group .mdc-button {
+        margin: 4px !important;
+        padding: 4px 8px !important;
+    }
+</style>
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-1">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Sales Report</h4>
+        </div>
+    </div>
+</div>
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4">
+    <div class="mdc-card py-1">
+        <h5 class="card-title">Annual Report</h5>
+        <form id="yearly-report-form" class="form" method="post" action="{% url 'report:generate_pdf_sales_year' %}">
+            {% csrf_token %}
+            <div class="mdc-layout-grid">
+                <div class="mdc-layout-grid__inner">
+                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-10">
+                        <input id="year" type="number" name="year" placeholder="Year"
+                            class="mdc-text-field__input custom-year-input" min="2023" max="{{ max_year }}">
+                    </div>
+                </div>
+                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6 d-flex justify-content-end align-items-center">
+                    <div class="mdc-card py-1">
+                        <h4 class="card-title mb-0">Generate Reports</h4>
+                        <div class="button-group">
+                            <button type="button" onclick="generateYearPDF()" class="mdc-button mdc-button--raised mdc-button--dense mdc-button--outlined icon-button">
+                                <i class="material-icons">picture_as_pdf</i> PDF
+                            </button>
+                            <button type="button" onclick="generateYearExcel()" class="mdc-button mdc-button--raised mdc-button--dense mdc-button--outlined icon-button">
+                                <i class="material-icons">description</i> Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4">
+    <div class="mdc-card py-1">
+        <h5 class="card-title">Monthly Report</h5>
+        <form id="monthly-report-form" class="form" method="post" action="{% url 'report:generate_pdf_sales_month' %}">
+            {% csrf_token %}
+            <div class="mdc-layout-grid">
+                <div class="mdc-layout-grid__inner">
+                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-10">
+                        <input id="year" type="number" name="year" placeholder="Year"
+                            class="mdc-text-field__input custom-year-input" min="2023" max="{{ max_year }}">
+                    </div>
+                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-10">
+                        <select id="month" name="month" class="mdc-text-field__input custom-month-input">
+                            <option value="" disabled selected>Month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6 d-flex justify-content-end align-items-center">
+                    <div class="mdc-card py-1">
+                        <h4 class="card-title mb-0">Generate Reports</h4>
+                        <div class="button-group">
+                            <button type="button" onclick="generateMonthPDF()" class="mdc-button mdc-button--raised mdc-button--dense mdc-button--outlined icon-button">
+                                <i class="material-icons">picture_as_pdf</i> PDF
+                            </button>
+                            <button type="button" onclick="generateMonthExcel()" class="mdc-button mdc-button--raised mdc-button--dense mdc-button--outlined icon-button">
+                                <i class="material-icons">description</i> Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4">
+    <div class="mdc-card py-1">
+        <h5 class="card-title">Daily Report</h5>
+        <form id="daily-report-form" class="form" method="post" action="{% url 'report:generatepdf_sales_day' %}">
+            {% csrf_token %}
+            <div class="mdc-layout-grid">
+                <div class="mdc-layout-grid__inner">
+                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-10">
+                        <input id="year" type="number" name="year" placeholder="Year"
+                            class="mdc-text-field__input custom-year-input" min="2023" max="{{ max_year }}">
+                    </div>
+                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-10">
+                        <select id="month" name="month" class="mdc-text-field__input custom-month-input">
+                            <option value="" disabled selected>Month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-10">
+                        <input id="day" type="number" name="day" placeholder="Day" class="mdc-text-field__input" min="1"
+                            max="31">
+                    </div>
+                </div>
+                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6 d-flex justify-content-end align-items-center">
+                    <div class="mdc-card py-1">
+                        <h4 class="card-title mb-0">Generate Reports</h4>
+                        <div class="button-group">
+                            <button type="button" onclick="generateDayPDF()" class="mdc-button mdc-button--raised mdc-button--dense mdc-button--outlined icon-button">
+                                <i class="material-icons">picture_as_pdf</i> PDF
+                            </button>
+                            <button type="button" onclick="generateDayExcel()" class="mdc-button mdc-button--raised mdc-button--dense mdc-button--outlined icon-button">
+                                <i class="material-icons">description</i> Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-1">
+        <form id="general-report-form" method="post">
+            {% csrf_token %}
+            <div class="mdc-layout-grid">
+                <div class="mdc-layout-grid__inner">
+                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
+                        <div class="mdc-card py-1">
+                            <h4 class="card-title mb-0">General Summary</h4>
+                            <p>Total Clients: {{ total_clientes }}</p>
+                            <p>Total Items Sold: {{ total_items_vendidos }}</p>
+                            <p>Total Sales: {{ total_ingresos|floatformat:2|intcomma }} Bs</p>
+                        </div>
+                    </div>
+                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6 d-flex justify-content-end align-items-center">
+                        <div class="mdc-card py-1">
+                            <h4 class="card-title mb-0">Search</h4>
+                            <input type="text" name="search" placeholder="Search Clients" class="mdc-text-field__input">
+                            <button type="submit" class="mdc-button mdc-button--raised">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-1">
+        <h4 class="card-title mb-0">Daily Sales</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for venta in ventas %}
+                <tr>
+                    <td>{{ venta.cliente }}</td>
+                    <td>{{ venta.item }}</td>
+                    <td>{{ venta.cantidad }}</td>
+                    <td>{{ venta.total }}</td>
+                    <td>{{ venta.fecha }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No sales found for today.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+<style>
+    .custom-year-input {
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        
+    }
+
+    .button-group.d-flex.justify-content-start.mdc-button {
+        margin-left: 10px;
+        
+    }
+
+
+    .custom-year-input,
+    .custom-month-input {
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+    }
+
+    .button-group.d-flex.justify-content-start.mdc-button {
+        margin-left: 10px;
+    }
+
+</style>
+
+{% block ScriptBlock %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var table = $('#miTabla');
+        if (table.length) {
+            table.DataTable({
+                "paging": true,
+                "ordering": true,
+                "searching": true,
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis']
+            }).buttons().container().appendTo('#miTabla_wrapper .col-md-6:eq(0)');
+        }
+
+
+        $('#year-field').show();
+
+        $('#search-form select[name="mode"]').change(function () {
+            var mode = $(this).val();
+            $('#year-field, #month-field, #date-field').hide();
+
+            if (mode === 'yearly') {
+                $('#year-field').show();
+            } else if (mode === 'monthly') {
+                $('#year-field').show();
+                $('#month-field').show();
+            } else if (mode === 'daily') {
+                $('#date-field').show();
+            }
+
+            if (mode === 'monthly') {
+                $('#year-field').prop('disabled', false);
+            } else {
+                $('#year-field').prop('disabled', true);
+            }
+        });
+
+        $('#year-field').prop('disabled', false);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var currentYear = new Date().getFullYear();
+            var yearInput = document.querySelector('.custom-year-input');
+            yearInput.setAttribute('max', currentYear);
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.view-data').forEach(button => {
+                button.addEventListener('click', function () {
+                    uni_modal("Recibo de la transaccion", `{% url 'pos:receipt-modal' %}?id=${this.dataset.id}`);
+                });
+            });
+
+            document.querySelectorAll('.delete-data').forEach(button => {
+                button.addEventListener('click', function () {
+                    const saleId = this.dataset.id;
+                    const saleCode = this.dataset.code;
+                    if (confirm(`Esta seguro de querer eliminar ${saleCode} del registro?`)) {
+                        delete_sale(saleId);
+                    }
+                });
+            });
+        });
+    });
+
+    function delete_sale(id) {
+        start_loader();
+        fetch("{% url 'pos:delete-sale' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ id })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("Ocurrió un Error.", 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert_toast("Ocurrió un Error.", 'error');
+            })
+            .finally(() => {
+                end_loader();
+            });
+    }
+    function generateYearPDF() {
+        document.getElementById("yearly-report-form").action = "{% url 'report:generate_pdf_sales_year' %}";
+        document.getElementById("yearly-report-form").submit();
+    }
+
+    function generateMonthPDF() {
+        document.getElementById("monthly-report-form").action = "{% url 'report:generate_pdf_sales_month' %}";
+        document.getElementById("monthly-report-form").submit();
+    }
+
+    function generateDayPDF() {
+        document.getElementById("daily-report-form").action = "{% url 'report:generatepdf_sales_day' %}";
+        document.getElementById("daily-report-form").submit();
+    }
+
+
+    function generateYearExcel() {
+        document.getElementById("yearly-report-form").action = "{% url 'report:generate_excel_sales_year' %}";
+        document.getElementById("yearly-report-form").submit();
+    }
+
+    function generateMonthExcel() {
+        document.getElementById("monthly-report-form").action = "{% url 'report:generate_excel_sales_month' %}";
+        document.getElementById("monthly-report-form").submit();
+    }
+    
+    function generateDayExcel() {
+        document.getElementById("daily-report-form").action = "{% url 'report:generate_excel_sales_day' %}";
+        document.getElementById("daily-report-form").submit();
+    }
+
+    
+    function generateGeneralExcel() {
+        document.getElementById("general-report-form").action = "{% url 'report:generate_excel_sales' %}";
+        document.getElementById("general-report-form").submit();
+    }
+    
+</script>
+{% endblock ScriptBlock %}

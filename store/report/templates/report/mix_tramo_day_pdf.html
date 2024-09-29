@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Sales Report by Segments</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2>Daily Sales Report by Segment</h2>
+    <p>Segment Date: Between {{day_name_start}}, {{ start_day }}/{{ start_month }}/{{ start_year }} and {{day_name_end}}, {{ end_day }}/{{ end_month }}/{{ end_year }}</p>
+    <p>Total Clients: {{ total_clientes }}</p>
+    <p>Total Items Sold: {{ total_items_vendidos }}</p>
+    <p>Total Revenue: {{ total_ingresos }}</p>
+    <p>Total Net Profit: {{ total_net_profit|floatformat:2 }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Products Sold Qty</th>
+                <th>Unit Price - Unit Cost</th>
+                <th>Grand Total</th>
+                <th>Net Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sale_data %}
+            <tr>
+                <td>{{ sale.date_added }}</td>
+                <td>{{ sale.cliente }}</td>
+                <td>
+                    <ul>
+                        {% for product, details in sale.products_list.items %}
+                        <li>{{ product }}: {{ details.qty }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        {% for product, details in sale.products_list.items %}
+                        <li>{{ product }}: {{ details.price }} - {{ details.cost }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>{{ sale.grand_total }}</td>
+                <td>{{ sale.net_profit|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
