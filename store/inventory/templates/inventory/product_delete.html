@@ -14,31 +14,24 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="categoryName" class="form-label">Name</label>
-                        <input type="text" id="categoryName" class="form-control" value="{{ products.name }}" readonly>
+                        <label for="productName" class="form-label">Name</label>
+                        <input type="text" id="productName" class="form-control" value="{{ products.name }}" readonly>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="categoryName" class="form-label">Category</label>
-                        <input type="text" id="categoryName" class="form-control" value="{{ products.category }}" readonly>
+                        <label for="productCategory" class="form-label">Category</label>
+                        <input type="text" id="productCategory" class="form-control" value="{{ products.category }}" readonly>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="categoryInfo" class="form-label">Product Information</label>
-                        <textarea id="categoryInfo" class="form-control" rows="3" readonly>{{ products.description }}</textarea>
+                        <label for="productDescription" class="form-label">Product Information</label>
+                        <textarea id="productDescription" class="form-control" rows="3" readonly>{{ products.description }}</textarea>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="categoryStatus" class="form-label">Status</label>
-                        <input type="text" id="categoryStatus" class="form-control" value="{% if products.status == 1 %}Active{% else %}Inactive{% endif %}" readonly>
-                    </div>
-                </div>
-            </div>
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">

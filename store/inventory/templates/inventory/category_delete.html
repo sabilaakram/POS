@@ -28,14 +28,6 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="categoryStatus" class="form-label">Status</label>
-                        <input type="text" id="categoryStatus" class="form-control" value="{% if category.status == 1 %}Active{% else %}Inactive{% endif %}" readonly>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
                         <label for="dateAdded" class="form-label">Creation Date</label>
                         <input type="text" id="dateAdded" class="form-control" value="{{ category.date_added }}" readonly>
                     </div>

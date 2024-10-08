@@ -16,6 +16,7 @@
     </div>
   </div>
 </div>
+
 <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
   <div class="mdc-card">
     <div class="table-responsive">
@@ -24,7 +25,7 @@
           <tr>
             <th>Product Name</th>
             <th>Creation Date</th>
-            <th>Cost</th>
+            <th>Image</th>
             <th>Price</th>
           </tr>
         </thead>
@@ -33,7 +34,13 @@
             <tr>
               <td>{{ product.name }}</td>
               <td>{{ product.date_added }}</td>
-              <td>{{ product.cost }}</td>
+              <td>
+                {% if product.image %}
+                  <img src="{{ product.image.url }}" alt="{{ product.name }}" width="50">
+                {% else %}
+                  No image
+                {% endif %}
+              </td>
               <td>{{ product.price }}</td>
             </tr>
           {% endfor %}
@@ -43,6 +50,7 @@
   </div>
 </div>
 {% endblock %}
+
 {% block ScriptBlock %}
   <script>
     $(document).ready(function() {

@@ -19,7 +19,6 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.TextField()),
                 ('description', models.TextField()),
-                ('status', models.IntegerField(default=1)),
                 ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
                 ('date_updated', models.DateTimeField(auto_now=True)),
             ],
@@ -32,15 +31,16 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('description', models.TextField(blank=True)),
                 ('price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('cost', models.DecimalField(decimal_places=8, default=0, max_digits=18)),
-                ('status', models.IntegerField(choices=[(0, 'Inactivo'), (1, 'Activo')], default=1)),
+                ('image', models.ImageField(upload_to='product_images/', null=True, blank=True)),  # Added image field
                 ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
                 ('date_updated', models.DateTimeField(auto_now=True)),
-                ('quantity', models.PositiveIntegerField(default=0)),
                 ('category', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='inventory.category')),
             ],
             options={
-                'indexes': [models.Index(fields=['code'], name='inventory_p_code_b14414_idx'), models.Index(fields=['name'], name='inventory_p_name_199ca2_idx'), models.Index(fields=['status'], name='inventory_p_status_b23ba8_idx')],
+                'indexes': [
+                    models.Index(fields=['code'], name='inventory_p_code_b14414_idx'),
+                    models.Index(fields=['name'], name='inventory_p_name_199ca2_idx'),
+                ],
             },
         ),
     ]

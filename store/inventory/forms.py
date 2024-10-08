@@ -1,7 +1,6 @@
 from django import forms
 from .models import Products, Category
 import unicodedata
-from django.utils.text import slugify
 import re
 from django.core.exceptions import ValidationError
 
@@ -14,87 +13,29 @@ class CategoryForm(forms.ModelForm):
             'description': 'Description',
         }
         widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Sweet Wine',
-            }),
-            'description': forms.Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter general information etc.',
-                'rows': 3,  
-            }),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category name'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter description', 'rows': 3}),
         }
-        error_messages = {
-            # You can add custom error messages here if needed
-        }
-        
-    def clean_name(self):
-        name = self.cleaned_data.get('name')
-        if name:
-            # Normalize the name: remove accents, extra spaces, and convert to lowercase
-            normalized_name = ''.join(c for c in unicodedata.normalize('NFD', name)
-                                    if unicodedata.category(c) != 'Mn')
-            normalized_name = re.sub(r'\s+', '', normalized_name.lower())
-            
-            instance = self.instance
-            # Check for existing categories with similar names
-            existing_categories = Category.objects.exclude(id=instance.id)
-            for category in existing_categories:
-                category_normalized = ''.join(c for c in unicodedata.normalize('NFD', category.name)
-                                            if unicodedata.category(c) != 'Mn')
-                category_normalized = re.sub(r'\s+', '', category_normalized.lower())
-                if category_normalized == normalized_name:
-                    raise ValidationError(f"A similar category already exists: '{category.name}'")
-        return name
 
 class ProductsForm(forms.ModelForm):
     class Meta:
         model = Products
-        fields = ['code', 'category', 'name', 'description', 'price', 'status']
+        fields = ['code', 'category', 'name', 'description', 'price', 'image']  # Removed cost, quantity, and status fields
         labels = {
             'code': 'Code',
             'category': 'Category',
             'name': 'Product Name',
             'description': 'Description',
             'price': 'Price',
-            'status': 'Status',
-            'cost': 'Cost',
-            'quantity': 'Quantity',
+            'image': 'Product Image',
         }
         widgets = {
-            'code': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Wine001',
-            }),
-            'category': forms.Select(attrs={
-                'class': 'form-control',
-            }),
-            'name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Sweet Wine',
-            }),
-            'description': forms.Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter general information etc.',
-                'rows': 3,
-            }),
-            'price': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter the product price',
-                'step': '0.01',
-            }),
-            'status': forms.Select(attrs={
-                'class': 'form-control',
-            }, choices=[
-                (1, 'Active'),
-                (0, 'Inactive')
-            ]),
-            'cost': forms.NumberInput(attrs={
-                'class': 'form-control'
-            }),
-            'quantity': forms.NumberInput(attrs={
-                'class': 'form-control'
-            }),
+            'code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter product code'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter product name'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter product description', 'rows': 3}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
         error_messages = {
             'code': {
@@ -114,27 +55,18 @@ class ProductsForm(forms.ModelForm):
                 'required': 'This field is required.',
                 'invalid': 'Enter a valid price.',
             },
-            'status': {
-                'required': 'This field is required.',
-                'invalid': 'Enter a valid status.',
-            }
         }
     
     def __init__(self, *args, **kwargs):
-        super(ProductsForm, self).__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
-            if field.errors:
-                field.widget.attrs['class'] += ' is-invalid'
-                
-    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            if field_name in self.errors:
+                field.widget.attrs['class'] += ' is-invalid'
         
         # Sort the category queryset alphabetically
         self.fields['category'].queryset = Category.objects.all().order_by('name')
-        # Make the status field non-editable
-        self.fields['status'].disabled = True
-    
+
     @staticmethod
     def normalize_text(text):
         if text:

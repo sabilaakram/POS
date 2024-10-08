@@ -42,11 +42,9 @@
           <tr>
             <th>Code</th>
             <th>Product Name</th>
+            <th>Image</th> <!-- Added Image header -->
             <th>Category</th>
-            <th>Cost</th>
-            <th>Quantity</th>
             <th>Price</th>
-            <th>Status</th>
             <th>Last Updated Date</th>
             <th class="text-center">Actions</th>
           </tr>
@@ -55,33 +53,24 @@
           {% for product in products %}
             <tr>
               <td class="text-center">{{ product.code }}</td>
-              
               <td class="link-cell">
                 <a href="{% url 'inventory:product_detail' product.pk %}">{{ product.name }}</a>
               </td>
-              <td class="link-cell">
-                {% if product.category and product.category.id %}
-                  <a href="{% url 'inventory:category_products' product.category.id %}">
-                    {{ product.category.name }}
-                  </a>
-                {% else %}
-                  <span>No category</span>  <!-- You can customize this message -->
-                {% endif %}
-              </td>
-
-              <td class="text-center">{{ product.cost }}</td>
-              <td class="text-center">{{ product.quantity }}</td>
-              <td class="text-center">{{ product.price }}</td>
-              
               <td class="text-center">
-                {% if product.status == product.STATUS_ACTIVE %}
-                    <span class="badge bg-success">Active</span>
-                {% elif product.status == product.STATUS_INACTIVE %}
-                    <span class="badge bg-warning">Inactive</span>
+                {% if product.image %}
+                  <img src="{{ product.image.url }}" alt="{{ product.name }}" width="50">
                 {% else %}
-                    <span class="badge bg-secondary">Unknown</span>
+                  No image
+                {% endif %}
+              </td> <!-- Added image field in tbody -->
+              <td class="text-center">
+                {% if product.category %}
+                  {{ product.category.name }}
+                {% else %}
+                  No category
                 {% endif %}
               </td>
+              <td class="text-center">{{ product.price }}</td>
               <td class="text-center">{{ product.date_updated|date:'d-m-Y H:i' }}</td>
               <td class="text-center">
                 <a href="{% url 'inventory:product_update' product.pk %}" class="btn btn-primary btn-sm" title="Edit">
@@ -110,7 +99,7 @@
         "responsive": true,
         "lengthChange": false,
         "autoWidth": false,
-        "order": [[7, "desc"]], 
+        "order": [[5, "desc"]],  // Order by last updated date
         "buttons": ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis']
       }).buttons().container().appendTo('#miTabla_wrapper .col-md-6:eq(0)');
     });

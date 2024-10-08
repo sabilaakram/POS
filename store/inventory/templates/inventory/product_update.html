@@ -11,7 +11,7 @@
 <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
     <div class="mdc-card">
         <div class="p-4">
-            <form method="post" class="product-form">
+            <form method="post" class="product-form" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group row">
                     <div class="col-md-6">
@@ -61,46 +61,25 @@
                         {% endif %}
                     </div>
                 </div>
+
+                <!-- Only Image Field -->
                 <div class="form-group row">
                     <div class="col-md-6">
-                        <label for="{{ form.price.id_for_label }}" class="form-label">{{ form.price.label }}</label>
-                        {{ form.price }}
-                        {% if form.price.errors %}
+                        <label for="{{ form.image.id_for_label }}" class="form-label">{{ form.image.label }}</label>
+                        {{ form.image }}
+                        {% if form.image.errors %}
                             <div class="text-danger">
-                                {% for error in form.price.errors %}
+                                {% for error in form.image.errors %}
                                     <p>{{ error }}</p>
                                 {% endfor %}
                             </div>
                         {% endif %}
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-6">
-                        <label class="form-label">{{ form.status.label }}</label>
-                        {% if form.instance.status %}
-                            <span class="badge bg-success">Active</span>
-                        {% else %}
-                            <span class="badge bg-warning">Inactive</span>
-                        {% endif %}
-                        {% if form.status.errors %}
-                            <div class="text-danger">
-                                {% for error in form.status.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
+                        {% if form.instance.image %}
+                            <img src="{{ form.instance.image.url }}" alt="{{ form.instance.name }}" width="150">
                         {% endif %}
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-md-6">
-                        <label class="form-label">Creation Date</label>
-                        <p>{{ products.date_added }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Update Date</label>
-                        <p>{{ products.date_updated }}</p>
-                    </div>
-                </div>
+                
                 <div class="form-group row mt-3">
                     <div class="col-12 d-flex justify-content-between">
                         <div class="btn-group">
@@ -111,29 +90,25 @@
                 </div>
             </form>
             {% if form.errors %}
-            <div class="text-danger mt-3">
-                <ul>
-                    {% for field in form %}
-                        {% for error in field.errors %}
+                <div class="text-danger mt-3">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
                             <li>{{ error }}</li>
                         {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+                    </ul>
+                </div>
             {% endif %}
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block ScriptBlock %}
-<script>
-    
-</script>
 <style>
     .container {
         background-color: #f8f9fa;
@@ -172,7 +147,7 @@
 </style>
 <script>
     $(function() {
-        
+        // Add any necessary JavaScript here
     });
 </script>
 {% endblock %}

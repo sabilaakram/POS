@@ -4,14 +4,14 @@
 <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
     <div class="mdc-card py-2">
         <div class="d-flex justify-content-between align-items-center">
-            <h4 class="card-title mb-0">Category Update</h4>
+            <h4 class="card-title mb-0">Update Category</h4>
         </div>
     </div>
 </div>
 <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
     <div class="mdc-card">
         <div class="p-4">
-            <form method="post" class="category-form">
+            <form method="post" class="category-form" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group row">
                     <div class="col-md-6">
@@ -37,36 +37,36 @@
                         {% endif %}
                     </div>
                 </div>
-                
-                <div class="form-group row">
-                </div>
+
+                <!-- Add Image Field -->
                 <div class="form-group row">
                     <div class="col-md-6">
-                        <label class="form-label">{{ form.status.label }}</label>
-                        {% if form.instance.status %}
-                            <span class="badge bg-success">Active</span>
-                        {% else %}
-                            <span class="badge bg-warning">Inactive</span>
-                        {% endif %}
-                        {% if form.status.errors %}
+                        <label for="{{ form.image.id_for_label }}" class="form-label">{{ form.image.label }}</label>
+                        {{ form.image }}
+                        {% if form.image.errors %}
                             <div class="text-danger">
-                                {% for error in form.status.errors %}
+                                {% for error in form.image.errors %}
                                     <p>{{ error }}</p>
                                 {% endfor %}
                             </div>
                         {% endif %}
+                        {% if form.instance.image %}
+                            <img src="{{ form.instance.image.url }}" alt="{{ form.instance.name }}" width="150">
+                        {% endif %}
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <div class="col-md-6">
                         <label class="form-label">Creation Date</label>
-                        <p>{{ products.date_added }}</p>
+                        <p>{{ category.date_added }}</p>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Update Date</label>
-                        <p>{{ products.date_updated }}</p>
+                        <p>{{ category.date_updated }}</p>
                     </div>
                 </div>
+
                 <div class="form-group row mt-3">
                     <div class="col-12 d-flex justify-content-between">
                         <div class="btn-group">
@@ -96,10 +96,6 @@
 {% endblock %}
 
 {% block ScriptBlock %}
-<script>
-    
-    
-</script>
 <style>
     .container {
         background-color: #f8f9fa;
@@ -138,7 +134,7 @@
 </style>
 <script>
     $(function() {
-        
+        // Any necessary JavaScript can go here
     });
 </script>
 {% endblock %}

@@ -15,23 +15,29 @@
       <p><strong>Code:</strong> {{ product.code }}</p>
       <p><strong>Name:</strong> {{ product.name }}</p>
       <p><strong>Description:</strong> {{ product.description }}</p>
-      <p><strong>Cost:</strong> {{ product.cost }}</p>
       <p><strong>Price:</strong> {{ product.price }}</p>
-      <p><strong>Quantity in Stock:</strong> {{ product.quantity }}</p>
-      <p><strong>Historical Quantity:</strong> {{ cantidad_historica }}</p>
-      <td class="text-center">
+      
+      <p><strong>Image:</strong></p>
+      {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" width="200">
+      {% else %}
+        <p>No image available</p>
+      {% endif %}
+      
+      <div class="text-center mt-4">
         <a href="{% url 'inventory:product_list' %}" class="btn btn-success btn-sm" title="Product List">
-          <i class="mdi mdi-view-list"></i>
+          <i class="mdi mdi-view-list"></i> Back to Product List
         </a>
         
         <a href="{% url 'inventory:product_update' product.pk %}" class="btn btn-primary btn-sm" title="Edit">
-          <i class="mdi mdi-pencil"></i>
+          <i class="mdi mdi-pencil"></i> Edit
         </a>
         <a href="{% url 'inventory:product_delete' product.pk %}" class="btn btn-danger btn-sm" title="Delete">
-          <i class="mdi mdi-delete"></i>
+          <i class="mdi mdi-delete"></i> Delete
         </a>
-      </td>
+      </div>
     </div>
   </div>
 </div>
+
 {% endblock %}
